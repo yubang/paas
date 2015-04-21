@@ -15,10 +15,11 @@ import json,os
 @param aid 应用id
 @param appHost 应用域名
 @param appDocument 应用代码
+@param firstAdd 是否是新增加的应用
 @author:yubang
 2015-04-21
 """
-def buildPhpConfig(aid,appHost):
+def buildPhpConfig(aid,appHost,firstAdd=False):
     "生成php配置文件，对外接口"
     baseObj=getBaseConfig()#获取配置文件
     
@@ -32,13 +33,27 @@ def buildPhpConfig(aid,appHost):
     buildNginxPhpConfig(str(aid),appHost,appDocument,appSocketPath)#生成nginx映射文件
     
     #初始化应用
-    buildWelcomeFile(str(aid))
+    if firstAdd:
+        buildWelcomeFile(str(aid))
+    
+    #刷新权限
+    refresh(str(aid),baseObj['base']['phpAppPrefix']+str(aid))
     
     #平滑加载配置文件
     os.system(baseObj['nginx']['serviceReload'])
     os.system(baseObj['php-fpm']['serviceReload'])
     
     
+"""
+@author:yubang
+2015-04-21
+"""
+def refresh(aid,appAccount):
+    "刷新应用权限"
+    baseObj=getBaseConfig()#获取配置文件
+    os.system("chown -Rv %s:%s %s"%(appAccount,baseObj['base']['webGroup'],baseObj['base']['allAppDocument']+"/"+str(aid)))
+    os.system("chmod -Rv 750 %s"%(baseObj['base']['allAppDocument']+"/"+str(aid)))
+
 
 """
 @author:yubang

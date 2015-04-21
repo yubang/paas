@@ -1,13 +1,15 @@
 #coding:UTF-8
 
 from flask import Flask
+from app.admin import app as adminApp
 from lib.buildConfig import buildPhpConfig
+from lib.git import getCodeFromOsc
 
 app=Flask(__name__)
+app.register_blueprint(adminApp,url_prefix="/admin")
 
 @app.route("/")
 def index():
-    buildPhpConfig(6,"127.0.0.6")
     return "debug"
     
 if __name__ == "__main__":

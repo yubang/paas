@@ -7,7 +7,7 @@ app=Flask(__name__)
 
 @app.route("/")
 def index():
-    buildPhpConfig(5,"/etc","","")
+    buildPhpConfig(6,"127.0.0.6")
     return "debug"
     
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
 2014-04-24
 
+
 应用用户列表
 id 主键
 username 用户名
@@ -10,6 +11,7 @@ college 学院
 specialty 专业
 joinTime 创建时间
 
+
 应用列表
 id 主键
 uid 用户id
@@ -19,3 +21,12 @@ gitUrl git地址，用于拉取代码
 status 状态 0未部署 1正在运行 2部署中 3已经停止
 createTime 应用创建时间
 
+
+扩展服务之数据库
+id 主键
+uid 用户id
+aid 应用id
+dbName 数据库名称(该名称不应该修改，否则需要大量方法维护)
+username 数据库账户名
+password 数据库帐号密码(密码不应该记录，所以记录下加密的)
+createTime 创建时间

@@ -12,6 +12,8 @@ app.register_blueprint(adminApp,url_prefix="/admin")
 
 @app.route("/")
 def index():
+    from lib.dbManager import buildDb
+    buildDb("pass1","user1","123")
     return "debug"
     
 if __name__ == "__main__":

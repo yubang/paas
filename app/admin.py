@@ -2,13 +2,16 @@
 
 """
 后台管理面板
+@author:yubang
 2015-04-21
 """
 
 from flask import Blueprint,render_template,request,redirect,session
 import config,time
 
+
 app=Blueprint("admin",__name__)
+
 
 def checkUser(fn):
     "检测管理员是否已经登录"
@@ -40,3 +43,15 @@ def account():
             session['admin']=time.time()
             
         return redirect("/admin")
+        
+
+@app.route("/userManager")        
+def userManager():
+    "用户管理面板"
+    return render_template("admin/userManager.html")
+    
+    
+@app.route("/appManager")        
+def appManager():
+    "应用管理面板"
+    return render_template("admin/appManager.html")    

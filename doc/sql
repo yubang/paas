@@ -1,0 +1,23 @@
+create table if not exists paas_account(
+    id int(11) auto_increment,
+    username varchar(50) not null,
+    password varchar(32) not null,
+    status tinyint(1) not null,
+    realname varchar(10) not null,
+    college varchar(50) not null,
+    specialty varchar(100) not null,
+    joinTime timestamp,
+    primary key(id),
+    unique(username)
+);
+
+create table if not exists paas_app(
+    id int(11) auto_increment,
+    uid int(11),
+    language varchar(10),
+    host varchar(255),
+    gitUrl varchar(255),
+    status tinyint(1),
+    createTime timestamp,
+    primary key(id)
+);

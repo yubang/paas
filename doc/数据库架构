@@ -1,0 +1,21 @@
+2014-04-24
+
+应用用户列表
+id 主键
+username 用户名
+password 密码
+status 是否启用
+realname 真实名字
+college 学院
+specialty 专业
+joinTime 创建时间
+
+应用列表
+id 主键
+uid 用户id
+language 语言（枚举：php,jsp,python,nodeJs,ruby）不能修改，否则可能导致不可预测的错误
+host 域名
+gitUrl git地址，用于拉取代码
+status 状态 0未部署 1正在运行 2部署中 3已经停止
+createTime 应用创建时间
+

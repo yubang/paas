@@ -6,9 +6,9 @@
 2015-04-21
 """
 
-from flask import Blueprint,render_template,request,redirect,session
-import config,time
-
+from flask import Blueprint,render_template,request,redirect,session,g
+import config,time,hashlib
+from lib.db import db,sqlDeal,objToDict
 
 app=Blueprint("admin",__name__)
 
@@ -48,10 +48,39 @@ def account():
 @app.route("/userManager")        
 def userManager():
     "用户管理面板"
+    sql="select * from paas_account order by id desc"
+    dao=db.execute(sql)
+    g.lists=map(objToDict,dao.fetchall())
+    dao.close()
     return render_template("admin/userManager.html")
     
     
 @app.route("/appManager")        
 def appManager():
     "应用管理面板"
-    return render_template("admin/appManager.html")    
+    return render_template("admin/appManager.html")
+    
+    
+@app.route("/userAdd",methods=['GET','POST'])  
+def userAdd():
+    if request.method == "GET":
+        return render_template("admin/userAdd.html")
+    else:
+        username=request.form.get("username",None)
+        password=request.form.get("password",None)
+        status=request.form.get("status",None)
+        realname=request.form.get("realname",None)
+        college=request.form.get("college",None)
+        specialty=request.form.get("specialty",None)
+        
+        #加密密码
+        password=hashlib.md5(password).hexdigest()
+        
+        #把用户写入数据库
+        args=map(sqlDeal,(username,password,status,realname,college,specialty))
+        print args
+        sql="insert into paas_account(username,password,status,realname,college,specialty) values('%s','%s','%s','%s','%s','%s')"%tuple(args)
+        dao=db.execute(sql)
+        dao.close()
+        
+        return redirect("/admin/userManager")      

@@ -17,14 +17,22 @@
             
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <a href="#">编辑信息</a>
-                    <a href="javascript:alert('要删除等下一个版本');">删除用户</a>
+                    <a href="userMessage?id={{ obj.id }}">编辑信息</a>
+                    <a href="javascript:deleteUser({{ obj.id }});">删除用户</a>
                 </div>
                 <div class="panel-body">
                     <p>用户名：{{ obj.username }}</p>
                     <p>真实名字：{{ obj.realname }}</p>
                     <p>学院：{{ obj.college }}</p>
                     <p>专业：{{ obj.specialty }}</p>
+                    <p>
+                        状态：
+                        {% if obj.status == 0 %}
+                            启用
+                        {% else %}
+                            禁用
+                        {% endif %}
+                    </p>
                     <p>加入时间：{{ obj.joinTime }}</p>
                 </div>
             </div>
@@ -32,5 +40,12 @@
         {% endfor %}
         
         {% include 'public_js.html' %}
+        <script>
+            function deleteUser(uid){
+                if(confirm("你真的要删除用户？")){
+                    location.href="deleteUser?id="+uid;
+                }
+            }
+        </script>
     </body>
 </html>

@@ -11,39 +11,39 @@
             
             <p>
                 用户名：
-                <input type="text" name="username" class="form-control" placeholder="请输入用户名" required>
+                <input type="text" name="username" class="form-control" placeholder="请输入用户名" value="{{ g.obj['username'] }}" required>
             </p>
             
             <p>
                 密码：
-                <input type="password" name="password" class="form-control" placeholder="请输入密码" required>
+                <input type="password" name="password" class="form-control" placeholder="请输入密码" {% if g.title == '添加信息' %}required{% endif %}>
             </p>
             
             <p>
                 状态：
                 <select class="form-control" name="status">
-                    <option value="0">启用</option>
-                    <option value="1">禁用</option>
+                    <option value="0" {% if g.obj['status'] == 0 %}selected{% endif %}>启用</option>
+                    <option value="1" {% if g.obj['status'] == 1 %}selected{% endif %}>禁用</option>
                 </select>
             </p>
             
             <p>
                 真实名字：
-                <input type="text" class="form-control" name="realname" placeholder="请输入真实名字" required>
+                <input type="text" class="form-control" name="realname" placeholder="请输入真实名字" value="{{ g.obj['realname'] }}" required>
             </p>
             
             <p>
                 学院：
-                <input type="text" class="form-control" name="college" placeholder="请输入学院" required>
+                <input type="text" class="form-control" name="college" placeholder="请输入学院" value="{{ g.obj['college'] }}" required>
             </p>
             
             <p>
                 专业：
-                <input type="text" class="form-control" name="specialty" placeholder="请输入专业" required>
+                <input type="text" class="form-control" name="specialty" placeholder="请输入专业" value="{{ g.obj['specialty'] }}" required>
             </p>
             
             <p align="center">
-                <input type="submit" value="添加用户" class="btn btn-primary">
+                <input type="submit" value="{{ g.title }}" class="btn btn-primary">
             </p>
             
         </form>    

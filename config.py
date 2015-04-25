@@ -8,6 +8,7 @@
 DEBUG = True
 SECRET_KEY = "root"
 
+#后台管理帐号
 ADMIN_USERNAME = "root"
 ADMIN_PASSWORD = "root"
 
@@ -26,4 +27,5 @@ REMOTE_SERVER=[
 ]
 
 #服务器安全密钥
-token="root"
+clientToken="root"
+servletToken="root"

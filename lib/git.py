@@ -7,8 +7,10 @@
 2015-04-21
 """
 
+
 from lib import app
 import json,os
+
 
 def getCodeFromOsc(aid,gitUrl):
     "从osc上拉取代码"
@@ -24,5 +26,23 @@ def getCodeFromOsc(aid,gitUrl):
     os.system("git clone %s %s"%(gitUrl,codePath))
     
     #迁移clone下来的代码
-    os.system("mv -fv %s %s"%(codePath,appPath))
-    
+    getCodeFromLocation(aid)
+
+
+def pullCode(aid):
+    "更新代码仓库的代码"
+    baseObj=json.loads(app.getConfig("config"))
+    codePath=baseObj['base']['codePath']+"/"+str(aid)
+    appPath=baseObj['base']['allAppDocument']
+    os.system("cd %s"%(codePath))
+    os.system("git pull")
+    getCodeFromLocation(aid)
+
+
+def getCodeFromLocation(aid):
+    "从本地代码仓库拉取代码"
+    baseObj=json.loads(app.getConfig("config"))
+    codePath=baseObj['base']['codePath']+"/"+str(aid)
+    appPath=baseObj['base']['allAppDocument']
+    os.system("rm -Rvf %s"%(appPath+"/"+str(aid)))
+    os.system("cp -Rfv %s %s"%(codePath,appPath))

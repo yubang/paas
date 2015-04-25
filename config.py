@@ -19,7 +19,7 @@ MYSQL_HOST = "127.0.0.1"
 MYSQL_PORT = 3306
 MYSQL_DB = "paas"
 
-PAAS_PATH = "/path"
+PAAS_PATH = "/home/yubang/project/paas"
 
 #远程服务器列表（ip）用于分布式部署应用
 REMOTE_SERVER_PHP=[

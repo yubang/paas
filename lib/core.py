@@ -8,10 +8,19 @@
 """
 
 import config
-import httplib
+import httplib,urllib
 
 def urlPostWithToken(host,path,data):
     "封装带有token的post请求"
+    
     data['token']=config.servletToken
+    headers = {"Content-type":"application/x-www-form-urlencoded","Accept":"text/plain"} 
+    
+    con=httplib.HTTPConnection(host,8080)
+    con.request("POST",path,urllib.urlencode(data),headers)
+    response=con.getresponse()
+    html=response.read()
+    con.close()
+    return html
     
 

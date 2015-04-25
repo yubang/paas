@@ -9,6 +9,7 @@
 
 from lib.app import getConfig
 from lib.buildConfig import buildPhpConfig
+import os,json
 
 """
 @param aid 应用id
@@ -20,11 +21,11 @@ from lib.buildConfig import buildPhpConfig
 def buildMainServerConfig(aid,appHost,remoteSocket):
     "生成反响代理服务器配置文件"
     data=getConfig("mainServer")
-    data=data.replace("{{ appHost }}",appHost).replace("{{ remoteSocket }}",remoteSocket).replace("{{ appId }}",aid)
+    data=data.replace("{{ appHost }}",appHost).replace("{{ remoteSocket }}",remoteSocket).replace("{{ appId }}",str(aid))
     
-    baseObj=getConfig("config")
+    baseObj=json.loads(getConfig("config"))
     #main_作为前缀
-    fp=open("main_"+baseObj['nginx']['confPath']+"/"+aid+".conf","w")
+    fp=open(baseObj['nginx']['confPath']+"/main_"+str(aid)+".conf","w")
     fp.write(data)
     fp.close()
     

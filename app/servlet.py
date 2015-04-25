@@ -26,7 +26,7 @@ def buildApp():
         appPort=10001
         
         buildServerConfig(aid,appHost,appPort,language)
-        return json.dumps({"result":"ok","":"http://"+appHost+":"+appPort})
+        return json.dumps({"result":"ok","remoteSocket":"http://"+appHost+":"+str(appPort)})
     except:
         return json.dumps({"result":"fail"})
     

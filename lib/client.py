@@ -12,11 +12,11 @@ from lib.webApp import buildMainServerConfig
 import json
 
 
-def buildApp(aid，appHost,language):
+def buildApp(aid,appHost,language):
     "生成一个应用"
     #请求应用服务器生成应用
     num=0
-    data={'language':language,'appHost':config.REMOTE_SERVER_PHP[num],'aid':aid}
+    data={'language':language,'appHost':config.REMOTE_SERVER_PHP[num],'aid':str(aid)}
     result=urlPostWithToken(config.REMOTE_SERVER_PHP[num],"/servlet/buildApp",data)
     
     #在主服务器生成反向代理配置文件

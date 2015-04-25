@@ -28,8 +28,8 @@ def buildPhpConfig(aid,appHost,appPort,firstAdd=False):
     appSocketPath=baseObj['base']['appSocketPath']+"/"+str(aid)
     appDocument=baseObj['base']['allAppDocument']+"/"+str(aid)
     
-    buildPhpFpmConfig(str(aid),appSocketPath,appPort)#生成php-fpm配置文件
-    buildNginxPhpConfig(str(aid),appHost,appDocument,appSocketPath)#生成nginx映射文件
+    buildPhpFpmConfig(str(aid),appSocketPath)#生成php-fpm配置文件
+    buildNginxPhpConfig(str(aid),appHost,appDocument,appSocketPath,appPort)#生成nginx映射文件
     
     #初始化应用
     if firstAdd:
@@ -133,7 +133,7 @@ def buildNginxPhpConfig(aid,appHost,appDocument,appSocketPath,appPort):
     data=data.replace("{{ appHost }}",appHost)
     data=data.replace("{{ appDocument }}",appDocument)
     data=data.replace("{{ appSocketPath }}",appSocketPath)
-    data=data.replace("{{ appPort }}",appPort)
+    data=data.replace("{{ appPort }}",str(appPort))
     
     fp=open(baseObj['nginx']['confPath']+"/"+aid+".conf","w")
     fp.write(data)

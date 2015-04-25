@@ -13,10 +13,14 @@ create table if not exists paas_account(
 
 create table if not exists paas_app(
     id int(11) auto_increment,
-    uid int(11),
-    language varchar(10),
-    host varchar(255),
-    gitUrl varchar(255),
+    title varchar(50) not null,
+    description varchar(200) not null,
+    uid int(11) not null,
+    language varchar(10) not null,
+    host varchar(255) not null,
+    gitUrl varchar(255) not null,
+    remoteServer varchar(255) not null,
+    remoteSocket varchar(255) not null,
     status tinyint(1),
     createTime timestamp,
     primary key(id)

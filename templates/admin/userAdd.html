@@ -11,12 +11,12 @@
             
             <p>
                 用户名：
-                <input type="text" name="username" class="form-control" placeholder="请输入用户名" value="{{ g.obj['username'] }}" required>
+                <input type="text" name="username" class="form-control" placeholder="请输入用户名" value="{{ g.obj['username'] }}" required {% if not g.add %}readonly{% endif %}>
             </p>
             
             <p>
                 密码：
-                <input type="password" name="password" class="form-control" placeholder="请输入密码" {% if g.title == '添加信息' %}required{% endif %}>
+                <input type="password" name="password" class="form-control" placeholder="请输入密码" {% if g.add %}required{% endif %}>
             </p>
             
             <p>

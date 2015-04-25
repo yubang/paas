@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>应用管理</title>
+        {% include 'public_css.html' %}
+    </head>
+    <body>
+        
+        <h1>应用管理</h1>
+        <a href="addApp">添加应用</a>
+        <hr>
+        
+        {% for obj in g.lists %}
+        
+        <div class="panel panel-default">
+            <div class="panel-heading">{{ obj.title }}</div>
+            <div class="panel-body">
+                <p>应用描述：{{ obj.description }}</p>
+                <p>应用语言：{{ obj.language }}</p>
+                <p>应用用户：{{ obj.username }}</p>
+                <p>应用git：{{ obj.gitUrl }}</p>
+                <p>应用服务器：{{ obj.remoteServer }}</p>
+                <p>应用域名：{{ obj.host }}</p>
+                <p>
+                    <a href="">发布应用</a>
+                    <a href="">启动应用</a>
+                    <a href="">停止应用</a>
+                    <a href="">重启应用</a>
+                    <a href="">编辑应用</a>
+                    <a href="">删除应用</a>
+                </p>
+            </div>
+        </div>
+        
+        {% endfor %}
+        
+        
+        {% include 'public_js.html' %}
+    </body>
+</html>

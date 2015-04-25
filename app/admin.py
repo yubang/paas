@@ -8,7 +8,8 @@
 
 from flask import Blueprint,render_template,request,redirect,session,g
 import config,time,hashlib
-from lib.db import db,sqlDeal,objToDict
+from lib.db import db,sqlDeal,objToDict,Session
+from lib.models import AppModel
 
 app=Blueprint("admin",__name__)
 
@@ -58,12 +59,20 @@ def userManager():
 @app.route("/appManager")        
 def appManager():
     "应用管理面板"
+    
+    sql="select paas_app.gitUrl,paas_app.host,paas_app.remoteServer,paas_app.title,paas_app.description,paas_app.language,paas_account.username from paas_app left join paas_account on paas_app.uid = paas_account.id where paas_app.status != 4 order by paas_app.id desc"
+    dao=db.execute(sql)
+    g.lists=map(objToDict,dao.fetchall())
+    dao.close()
+    
     return render_template("admin/appManager.html")
     
     
 @app.route("/userAdd",methods=['GET','POST'])  
 def userAdd():
+    "添加用户"
     if request.method == "GET":
+        g.add=True
         g.title=u"添加信息"
         g.obj={}
         return render_template("admin/userAdd.html")
@@ -96,6 +105,7 @@ def userMessage():
     
     if request.method == "GET":
         g.title=u"修改信息"
+        g.add=False
         
         dao=db.execute("select * from paas_account where id = %s limit 1"%(sqlDeal(uid)))
         g.obj=objToDict(dao.fetchone())
@@ -103,7 +113,6 @@ def userMessage():
         return render_template("admin/userAdd.html")
     else:
         
-        username=request.form.get("username",None)
         password=request.form.get("password",None)
         status=request.form.get("status",None)
         realname=request.form.get("realname",None)
@@ -111,13 +120,13 @@ def userMessage():
         specialty=request.form.get("specialty",None)
         
         if password == "":
-            args=map(sqlDeal,(username,status,realname,college,specialty,uid))
-            sql="update paas_account set username = '%s',status = '%s',realname = '%s',college = '%s',specialty='%s' where id = %s"%tuple(args)
+            args=map(sqlDeal,(status,realname,college,specialty,uid))
+            sql="update paas_account set status = '%s',realname = '%s',college = '%s',specialty='%s' where id = %s"%tuple(args)
         else:
             #加密密码
             password=hashlib.md5(password).hexdigest()
-            args=map(sqlDeal,(username,password,status,realname,college,specialty,uid))
-            sql="update paas_account set username = '%s',password = '%s',status = '%s',realname = '%s',college = '%s',specialty='%s' where id = %s"%tuple(args)
+            args=map(sqlDeal,(password,status,realname,college,specialty,uid))
+            sql="update paas_account set password = '%s',status = '%s',realname = '%s',college = '%s',specialty='%s' where id = %s"%tuple(args)
             
         #修改用户信息
         dao=db.execute(sql)
@@ -133,4 +142,37 @@ def deleteUser():
     dao=db.execute(sql)
     dao.close()
     return redirect("/admin/userManager")
-             
+
+
+@app.route("/addApp",methods=['GET','POST'])
+def addApp():
+    "添加应用"
+    if request.method == "GET":
+        g.add=True
+        
+        sql="select * from paas_account where status != 3"
+        dao=db.execute(sql)
+        g.users=map(objToDict,dao.fetchall())
+        dao.close()
+        
+        return render_template("admin/addApp.html")
+    else:
+        uid=request.form.get("uid",None)
+        title=request.form.get("title",None)
+        description=request.form.get("description",None)
+        language=request.form.get("language",None)
+        host=request.form.get("host",None)
+        gitUrl=request.form.get("gitUrl",None)
+        #处理git地址，防止注入恶意代码
+        gitUrl=gitUrl.replace(" ","")
+        
+        #添加应用信息
+        session=Session()
+        obj=AppModel(title,description,uid,language,host,gitUrl,-1)
+        session.add(obj)
+        session.commit()
+        
+        #为应用创建一个数据库
+        
+        
+        return redirect("/admin/appManager")            

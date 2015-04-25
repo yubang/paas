@@ -61,7 +61,7 @@ def userManager():
 def appManager():
     "应用管理面板"
     
-    sql="select paas_db.username as dbUsername,paas_db.password as dbPassword,paas_db.dbName,paas_db.host as dbHost,paas_db.port as dbPort,paas_app.id,paas_app.gitUrl,paas_app.host,paas_app.remoteServer,paas_app.title,paas_app.description,paas_app.language,paas_account.username from paas_app,paas_account,paas_db where paas_app.status != 4 AND paas_app.uid = paas_account.id AND paas_db.aid = paas_app.id order by paas_app.id desc"
+    sql="select paas_app.status,paas_db.username as dbUsername,paas_db.password as dbPassword,paas_db.dbName,paas_db.host as dbHost,paas_db.port as dbPort,paas_app.id,paas_app.gitUrl,paas_app.host,paas_app.remoteServer,paas_app.title,paas_app.description,paas_app.language,paas_account.username from paas_app,paas_account,paas_db where paas_app.status != 4 AND paas_app.uid = paas_account.id AND paas_db.aid = paas_app.id order by paas_app.id desc"
     dao=db.execute(sql)
     g.lists=map(objToDict,dao.fetchall())
     dao.close()

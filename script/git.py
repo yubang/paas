@@ -24,9 +24,16 @@ def init():
     if obj != None:
         r=objToDict(obj)
         deal(r)
+        
+        if r['executeSql'] != '':
+            #执行回调sql
+            dao2=db.execute(r['executeSql'])
+            dao2.close()
+        
         sql="delete from paas_gitQueue where id = %d"%(r['id'])
         dao2=db.execute(sql)
         dao2.close()
+        
     dao.close()
     
     

@@ -22,6 +22,20 @@
                 <p>应用git：{{ obj.gitUrl }}</p>
                 <p>应用服务器：{{ obj.remoteServer }}</p>
                 <p>应用域名：{{ obj.host }}</p>
+                <p>
+                    应用状态：
+                    {% if obj.status == -1 %}
+                        未发布
+                    {% elif obj.status == 0  %}
+                        未部署
+                    {% elif obj.status == 1  %}
+                        运行中
+                    {% elif obj.status == 2  %}
+                        部署中
+                    {% elif obj.status == 3  %}
+                        已经停止          
+                    {% endif %}
+                </p>
                 <hr>
                 <p>数据库地址：{{ obj.dbHost }}</p>
                 <p>数据库名称：{{ obj.dbName }}</p>

@@ -44,5 +44,6 @@ create table if not exists paas_gitQueue(
     aid int(11) not null,
     command varchar(50) not null,
     gitUrl varchar(255) not null,
+    executeSql varchar(255) not null,
     primary key(id)
 )ENGINE= MEMORY;

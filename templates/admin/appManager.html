@@ -22,13 +22,20 @@
                 <p>应用git：{{ obj.gitUrl }}</p>
                 <p>应用服务器：{{ obj.remoteServer }}</p>
                 <p>应用域名：{{ obj.host }}</p>
+                <hr>
+                <p>数据库地址：</p>
+                <p>数据库名称：</p>
+                <p>数据库用户名：</p>
+                <p>数据库密码：</p>
+                <p>数据库端口：</p>
+                <hr>
                 <p>
                     <a href="">发布应用</a>
                     <a href="">启动应用</a>
                     <a href="">停止应用</a>
                     <a href="">重启应用</a>
-                    <a href="">编辑应用</a>
-                    <a href="">删除应用</a>
+                    <a href="editApp?id={{ obj.id }}">编辑应用</a>
+                    <a href="javascript:deleteApp({{ obj.id }});">删除应用</a>
                 </p>
             </div>
         </div>
@@ -37,5 +44,12 @@
         
         
         {% include 'public_js.html' %}
+        <script>
+            function deleteApp(uid){
+                if(confirm("你真的要删除应用？")){
+                    location.href="deleteApp?id="+uid;
+                }
+            }
+        </script>
     </body>
 </html>

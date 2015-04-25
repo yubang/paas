@@ -60,7 +60,7 @@ def userManager():
 def appManager():
     "应用管理面板"
     
-    sql="select paas_app.gitUrl,paas_app.host,paas_app.remoteServer,paas_app.title,paas_app.description,paas_app.language,paas_account.username from paas_app left join paas_account on paas_app.uid = paas_account.id where paas_app.status != 4 order by paas_app.id desc"
+    sql="select paas_app.id,paas_app.gitUrl,paas_app.host,paas_app.remoteServer,paas_app.title,paas_app.description,paas_app.language,paas_account.username from paas_app left join paas_account on paas_app.uid = paas_account.id where paas_app.status != 4 order by paas_app.id desc"
     dao=db.execute(sql)
     g.lists=map(objToDict,dao.fetchall())
     dao.close()
@@ -149,6 +149,7 @@ def addApp():
     "添加应用"
     if request.method == "GET":
         g.add=True
+        g.obj={}
         
         sql="select * from paas_account where status != 3"
         dao=db.execute(sql)
@@ -175,4 +176,34 @@ def addApp():
         #为应用创建一个数据库
         
         
-        return redirect("/admin/appManager")            
+        return redirect("/admin/appManager")   
+        
+        
+@app.route("/deleteApp")        
+def deleteApp():
+    "删除应用"
+    uid=request.args.get("id",None)
+    sql="update paas_app set status = 4 where id = "+sqlDeal(uid)
+    dao=db.execute(sql)
+    dao.close()
+    return redirect("/admin/appManager")
+    
+
+@app.route("/editApp")    
+def editApp():
+    "编辑应用"
+    aid=request.args.get("id",None)
+    if request.method == "GET":
+        g.add=False
+        
+        sql="select * from paas_app where id = %s limit 1"%(sqlDeal(aid))
+        dao=db.execute(sql)
+        g.obj=objToDict(dao.first())
+        dao.close()
+        
+        sql="select * from paas_account where status != 3"
+        dao=db.execute(sql)
+        g.users=map(objToDict,dao.fetchall())
+        dao.close()
+        
+        return render_template("admin/addApp.html")         

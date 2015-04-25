@@ -15,12 +15,12 @@
             
             <p>
                 应用名称：
-                <input type="text" name="title" class="form-control" required placeholder="请输入应用名称">
+                <input type="text" name="title" class="form-control" value="{{ g.obj['title'] }}" required placeholder="请输入应用名称">
             </p>
             
             <p>
                 应用描述：
-                <input type="text" name="description" class="form-control" required required placeholder="请输入应用描述">
+                <input type="text" name="description" class="form-control" value="{{ g.obj['description'] }}" required required placeholder="请输入应用描述">
             </p>
             
             <p>
@@ -41,12 +41,12 @@
             
             <p>
                 域名：
-                <input type="text" name="host" placeholder="请输入域名" required class="form-control">
+                <input type="text" name="host" placeholder="请输入域名" value="{{ g.obj['host'] }}" required class="form-control">
             </p>
             
             <p>
                 git地址：
-                <input type="text" name="gitUrl" placeholder="git地址" required class="form-control">
+                <input type="text" name="gitUrl" placeholder="git地址" value="{{ g.obj['gitUrl'] }}" required class="form-control">
             </p>
             
             <p align="center">

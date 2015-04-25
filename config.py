@@ -11,6 +11,7 @@ SECRET_KEY = "root"
 ADMIN_USERNAME = "root"
 ADMIN_PASSWORD = "root"
 
+#mysql服务器配置
 MYSQL_USERNAME = "root"
 MYSQL_PASSWORD = "root"
 MYSQL_HOST = "127.0.0.1"
@@ -23,3 +24,6 @@ PAAS_PATH = "/path"
 REMOTE_SERVER=[
     '127.0.0.1',
 ]
+
+#服务器安全密钥
+token="root"

@@ -32,5 +32,7 @@ uid 用户id
 aid 应用id
 dbName 数据库名称(该名称不应该修改，否则需要大量方法维护)
 username 数据库账户名
-password 数据库帐号密码(密码不应该记录，所以记录下加密的)
+password 数据库帐号密码
+host 数据库主机名
+port 数据库端口
 createTime 创建时间

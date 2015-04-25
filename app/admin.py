@@ -10,6 +10,7 @@ from flask import Blueprint,render_template,request,redirect,session,g
 import config,time,hashlib
 from lib.db import db,sqlDeal,objToDict,Session
 from lib.models import AppModel
+from lib.dbManager import buildDb
 
 app=Blueprint("admin",__name__)
 
@@ -60,7 +61,7 @@ def userManager():
 def appManager():
     "应用管理面板"
     
-    sql="select paas_app.id,paas_app.gitUrl,paas_app.host,paas_app.remoteServer,paas_app.title,paas_app.description,paas_app.language,paas_account.username from paas_app left join paas_account on paas_app.uid = paas_account.id where paas_app.status != 4 order by paas_app.id desc"
+    sql="select paas_db.username as dbUsername,paas_db.password as dbPassword,paas_db.dbName,paas_db.host as dbHost,paas_db.port as dbPort,paas_app.id,paas_app.gitUrl,paas_app.host,paas_app.remoteServer,paas_app.title,paas_app.description,paas_app.language,paas_account.username from paas_app,paas_account,paas_db where paas_app.status != 4 AND paas_app.uid = paas_account.id AND paas_db.aid = paas_app.id order by paas_app.id desc"
     dao=db.execute(sql)
     g.lists=map(objToDict,dao.fetchall())
     dao.close()
@@ -174,7 +175,15 @@ def addApp():
         session.commit()
         
         #为应用创建一个数据库
+        dbName=hashlib.md5(str(time.time())).hexdigest()
+        username=hashlib.md5(uid+str(time.time())).hexdigest()
+        password=hashlib.md5(title.encode("UTF-8")+str(time.time())).hexdigest()
+        #建立数据库
+        buildDb(dbName,username,password)
         
+        sql="insert into paas_db(uid,aid,dbName,username,password,host,port) values('%s','%s','%s','%s','%s','%s','%s')"%(sqlDeal(uid),str(obj.id),dbName,username,password,config.MYSQL_HOST,config.MYSQL_PORT)
+        dao=db.execute(sql)
+        dao.close()
         
         return redirect("/admin/appManager")   
         
@@ -189,7 +198,7 @@ def deleteApp():
     return redirect("/admin/appManager")
     
 
-@app.route("/editApp")    
+@app.route("/editApp",methods=['GET','POST'])    
 def editApp():
     "编辑应用"
     aid=request.args.get("id",None)
@@ -206,4 +215,21 @@ def editApp():
         g.users=map(objToDict,dao.fetchall())
         dao.close()
         
-        return render_template("admin/addApp.html")         
+        return render_template("admin/addApp.html")
+    else:
+        
+        uid=request.form.get("uid",None)
+        title=request.form.get("title",None)
+        description=request.form.get("description",None)
+        language=request.form.get("language",None)
+        host=request.form.get("host",None)
+        gitUrl=request.form.get("gitUrl",None)
+        #处理git地址，防止注入恶意代码
+        gitUrl=gitUrl.replace(" ","")
+        
+        args=map(sqlDeal,[uid,title,description,language,host,gitUrl,aid])
+        
+        sql="update paas_app set uid = '%s',title='%s',description='%s',language='%s',host='%s',gitUrl='%s' where id = %s"%tuple(args)
+        dao=db.execute(sql)
+        dao.close()
+        return redirect("/admin/appManager")         

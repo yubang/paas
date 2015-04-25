@@ -25,7 +25,7 @@
             
             <p>
                 用户：
-                <select name="uid" class="form-control">
+                <select id="uid" name="uid" class="form-control">
                     {% for user in g.users %}
                     <option value="{{ user.id }}">{{ user.username }}</option>
                     {% endfor %}
@@ -34,7 +34,7 @@
             
             <p>
                 应用语言：
-                <select name="language" class="form-control">
+                <select id="language" name="language" class="form-control">
                     <option>php</option>
                 </select>
             </p>    
@@ -56,5 +56,12 @@
         </form>
         
         {% include 'public_js.html' %}
+        
+        {% if not g.add %}
+        <script>
+            $("#language").val("{{ g.obj['language'] }}");
+            $("#uid").val("{{ g.obj['uid'] }}");
+        </script>
+        {% endif %}
     </body>
 </html>

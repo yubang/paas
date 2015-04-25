@@ -26,13 +26,15 @@ create table if not exists paas_app(
     primary key(id)
 );
 
-create table if not exists pass_db(
+create table if not exists paas_db(
     id int(11) auto_increment,
-    uid int(11),
-    aid int(11),
-    dbName varchar(100),
-    username varchar(100),
-    password varchar(32),
+    uid int(11) not null,
+    aid int(11) not null,
+    dbName varchar(100) not null,
+    username varchar(100) not null,
+    password varchar(32) not null,
+    host varchar(255) not null,
+    port varchar(10) not null,
     createTime timestamp,
     primary key(id)
 );

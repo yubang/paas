@@ -22,7 +22,7 @@ MYSQL_DB = "paas"
 PAAS_PATH = "/path"
 
 #远程服务器列表（ip）用于分布式部署应用
-REMOTE_SERVER=[
+REMOTE_SERVER_PHP=[
     '127.0.0.1',
 ]
 

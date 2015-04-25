@@ -9,13 +9,27 @@
 """
 
 from flask import Blueprint,request,session
+from lib.webApp import buildServerConfig
+import json
 
 app=Blueprint("servlet",__name__)
 
 
+@app.route('/buildApp',methods=['POST'])
 def buildApp():
     "创建应用"
-    pass
+    try:
+        aid=request.form.get("aid",None)
+        appHost=request.form.get("appHost",None)
+        language=request.form.get("language",None)
+        
+        appPort=10001
+        
+        buildServerConfig(aid,appHost,appPort,language)
+        return json.dumps({"result":"ok","":"http://"+appHost+":"+appPort})
+    except:
+        return json.dumps({"result":"fail"})
+    
     
 def updateApp():
     "更新应用"

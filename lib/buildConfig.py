@@ -6,7 +6,6 @@
 2015-04-20
 """
 
-
 import json,os
 
 
@@ -14,12 +13,12 @@ import json,os
 对外接口，生成php配置文件
 @param aid 应用id
 @param appHost 应用域名
-@param appDocument 应用代码
+@param appPort 应用端口
 @param firstAdd 是否是新增加的应用
 @author:yubang
 2015-04-21
 """
-def buildPhpConfig(aid,appHost,firstAdd=False):
+def buildPhpConfig(aid,appHost,appPort,firstAdd=False):
     "生成php配置文件，对外接口"
     baseObj=getBaseConfig()#获取配置文件
     
@@ -29,7 +28,7 @@ def buildPhpConfig(aid,appHost,firstAdd=False):
     appSocketPath=baseObj['base']['appSocketPath']+"/"+str(aid)
     appDocument=baseObj['base']['allAppDocument']+"/"+str(aid)
     
-    buildPhpFpmConfig(str(aid),appSocketPath)#生成php-fpm配置文件
+    buildPhpFpmConfig(str(aid),appSocketPath,appPort)#生成php-fpm配置文件
     buildNginxPhpConfig(str(aid),appHost,appDocument,appSocketPath)#生成nginx映射文件
     
     #初始化应用
@@ -118,10 +117,11 @@ def buildPhpFpmConfig(aid,appSocketPath):
 @param appHost 应用域名
 @param appDocument 应用路径
 @param appSocketPath socket位置
+@param appPort 应用端口
 @author:yubang
 2015-04-21
 """
-def buildNginxPhpConfig(aid,appHost,appDocument,appSocketPath):
+def buildNginxPhpConfig(aid,appHost,appDocument,appSocketPath,appPort):
     "动态生成nginx映射虚拟主机配置文件"
     fp=open("data/nginxPhp.conf","r")
     data=fp.read()
@@ -133,6 +133,7 @@ def buildNginxPhpConfig(aid,appHost,appDocument,appSocketPath):
     data=data.replace("{{ appHost }}",appHost)
     data=data.replace("{{ appDocument }}",appDocument)
     data=data.replace("{{ appSocketPath }}",appSocketPath)
+    data=data.replace("{{ appPort }}",appPort)
     
     fp=open(baseObj['nginx']['confPath']+"/"+aid+".conf","w")
     fp.write(data)

@@ -57,7 +57,7 @@ def startApp(aid):
     dao.close()
     
     
-def stopApp():
+def stopApp(aid):
     "停止app"
     baseObj=json.loads(getConfig("config"))
     path=baseObj['nginx']['confPath']+"/main_"+str(aid)+".conf"
@@ -70,7 +70,7 @@ def stopApp():
     dao.close()
     
     
-def developApp(aid):
+def developApp(aid,option):
     "部署应用，无论是不是第一次部署，主机不处理，逻辑交给应用服务器"
     #提取应用数据
     sql="select * from paas_app where id = %d limit 1"%(aid)
@@ -79,8 +79,8 @@ def developApp(aid):
     dao.close()
     
     #部署过程走异步路线，所以只改变标志位
-    data={}
-    result=urlPostWithToken(config.REMOTE_SERVER_PHP[num],"/servlet/developApp",data)
+    data={'option':option,'language':appData['language'],'appHost':appData['remoteServer'],'aid':appData['id']}
+    result=urlPostWithToken(appData['remoteServer'],"/servlet/developApp",data)
     
     #修改状态
     sql="update paas_app set status = 2 where id =%d"%(aid)

@@ -10,6 +10,8 @@
 
 from flask import Blueprint,request,session
 from lib.webApp import buildServerConfig
+from lib.db import db,objToDict,sqlDeal
+from lib import git
 import json
 
 app=Blueprint("servlet",__name__)
@@ -29,28 +31,35 @@ def buildApp():
         return json.dumps({"result":"ok","remoteSocket":"http://"+appHost+":"+str(appPort)})
     except:
         return json.dumps({"result":"fail"})
-    
-    
-def updateApp():
-    "更新应用"
-    pass
-    
-def deleteApp():
-    "删除应用"
-    pass
-    
-def rebootApp():
-    "重启应用"
-    pass
-    
-def startApp():
-    "启动应用"
-    pass
 
-def stopApp():
-    "停止应用"
-    pass
+
+@app.route("/developApp",methods=['POST'])    
+def develop():
+    "发布应用"
     
-def reBuildApp():
-    "重构应用"
-    pass
+    #提取应用信息
+    aid=int(request.form.get("aid",None))
+    sql="select * from paas_app where id = %d limit 1"%(aid)
+    dao=db.execute(sql)
+    appData=objToDict(dao.first())
+    dao.close()
+    
+    #把任务交给后台队列
+    option=request.form.get("option",None)
+    if option == "reboot":
+        gitUrl=""
+        command="cp"
+    elif option == "develop":
+        gitUrl=appData['gitUrl']
+        if git.checkLocationCode(aid):
+            command="pull"
+        else:
+            command="clone"
+            
+    executeSql="update paas_app set status = 1 where id = %d"%(aid)
+    
+    sql="insert into paas_gitQueue(aid,command,gitUrl,executeSql) values(%d,'%s','%s','%s')"%(aid,command,gitUrl,sqlDeal(executeSql))
+    dao=db.execute(sql)
+    dao.close()
+    
+    return "ok"

@@ -18,10 +18,12 @@ def deal(obj):
 
 
 def init():
+    sleepSign=True
     sql="select * from paas_gitQueue limit 1"
     dao=db.execute(sql)
     obj=dao.first()
     if obj != None:
+        sleepSign=False
         r=objToDict(obj)
         deal(r)
         
@@ -36,8 +38,11 @@ def init():
         
     dao.close()
     
+    if sleepSign:
+        print 'sleep 1s'
+        time.sleep(1)
     
 if __name__ == "__main__":
     while True:
         init()
-        time.sleep(1)
+        

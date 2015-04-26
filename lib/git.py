@@ -46,3 +46,13 @@ def getCodeFromLocation(aid):
     appPath=baseObj['base']['allAppDocument']
     os.system("rm -Rvf %s"%(appPath+"/"+str(aid)))
     os.system("cp -Rfv %s %s"%(codePath,appPath))
+    
+    
+def checkLocationCode(aid):
+    "检测本地是否有克隆好的代码"
+    baseObj=json.loads(app.getConfig("config"))
+    codePath=baseObj['base']['codePath']+"/"+str(aid)
+    if os.path.exists(codePath):
+        return True
+    else:
+        return False

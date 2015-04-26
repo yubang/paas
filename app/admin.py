@@ -11,6 +11,7 @@ import config,time,hashlib
 from lib.db import db,sqlDeal,objToDict,Session
 from lib.models import AppModel
 from lib.dbManager import buildDb
+from lib import client
 
 app=Blueprint("admin",__name__)
 
@@ -232,4 +233,26 @@ def editApp():
         sql="update paas_app set uid = '%s',title='%s',description='%s',language='%s',host='%s',gitUrl='%s' where id = %s"%tuple(args)
         dao=db.execute(sql)
         dao.close()
-        return redirect("/admin/appManager")         
+        return redirect("/admin/appManager")
+        
+        
+@app.route("/optionApp/<option>",methods=['POST'])        
+def optionApp(option):
+    "操作应用"
+    aid=int(request.form.get("aid",None))
+    if option == "start":
+        #启动应用
+        client.startApp(aid)
+        return "ok"
+    elif option == "stop":
+        #停止应用
+        client.stopApp(aid)
+        return "ok"
+    elif option == "reboot":
+        #重启应用
+        client.developApp(aid,"reboot")
+        return "ok"
+    elif option == "develop":
+        #部署应用
+        client.developApp(aid,"develop")
+        return "ok"             

@@ -25,7 +25,12 @@ def buildApp():
         appHost=request.form.get("appHost",None)
         language=request.form.get("language",None)
         
-        appPort=10001
+        #确定应用端口号
+        dao=db.execute("select count(*) from paas_app where remoteServer = '%s'"%("127.0.0.1"))
+        r=objToDict(dao.first())
+        dao.close()
+        appPort=10001+int(r['count(*)'])
+        
         
         buildServerConfig(aid,appHost,appPort,language)
         return json.dumps({"result":"ok","remoteSocket":"http://"+appHost+":"+str(appPort)})

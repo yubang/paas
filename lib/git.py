@@ -23,11 +23,16 @@ def getCodeFromOsc(aid,gitUrl):
     
     os.system("rm -Rvf %s"%(codePath))
         
-    os.system("git clone %s %s"%(gitUrl,codePath))
+    out=os.popen("git clone %s %s"%(gitUrl,codePath))
+    log=out.read()
+    if log.find("Receiving objects: 100%") == -1:
+        return False
     
     #迁移clone下来的代码
     getCodeFromLocation(aid)
-
+    
+    return True
+    
 
 def pullCode(aid):
     "更新代码仓库的代码"

@@ -186,6 +186,9 @@ def addApp():
         dao=db.execute(sql)
         dao.close()
         
+        #初始化应用
+        client.buildApp(obj.id,sqlDeal(host),sqlDeal(language))
+        
         return redirect("/admin/appManager")   
         
         

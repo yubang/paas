@@ -33,7 +33,9 @@
                     {% elif obj.status == 2  %}
                         部署中
                     {% elif obj.status == 3  %}
-                        已经停止          
+                        已经停止 
+                    {% elif obj.status == 5  %}
+                        发布失败           
                     {% endif %}
                 </p>
                 <hr>

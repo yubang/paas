@@ -12,8 +12,11 @@ app.register_blueprint(servletApp,url_prefix="/servlet")
 
 @app.route("/")
 def index():
-    from lib.client import buildApp
-    print buildApp(5,'127.0.0.7',"php")
+    from lib.db import db,objToDict
+    dao=db.execute("select count(*) from paas_app where remoteServer = '%s'"%("127.0.0.1"))
+    r=objToDict(dao.first())
+    dao.close()
+    print r
     return "debug"
     
 if __name__ == "__main__":

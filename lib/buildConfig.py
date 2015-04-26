@@ -14,11 +14,10 @@ import json,os
 @param aid 应用id
 @param appHost 应用域名
 @param appPort 应用端口
-@param firstAdd 是否是新增加的应用
 @author:yubang
 2015-04-21
 """
-def buildPhpConfig(aid,appHost,appPort,firstAdd=False):
+def buildPhpConfig(aid,appHost,appPort):
     "生成php配置文件，对外接口"
     baseObj=getBaseConfig()#获取配置文件
     
@@ -32,8 +31,7 @@ def buildPhpConfig(aid,appHost,appPort,firstAdd=False):
     buildNginxPhpConfig(str(aid),appHost,appDocument,appSocketPath,appPort)#生成nginx映射文件
     
     #初始化应用
-    if firstAdd:
-        buildWelcomeFile(str(aid))
+    buildWelcomeFile(str(aid))
     
     #刷新权限
     refresh(str(aid),baseObj['base']['phpAppPrefix']+str(aid))
@@ -66,10 +64,10 @@ def buildWelcomeFile(aid):
     html=fp.read()
     fp.close()
     
-    try:
-        os.makedirs(baseObj['base']['allAppDocument']+"/"+str(aid))
-    except:
-        pass
+    path=baseObj['base']['allAppDocument']+"/"+str(aid)
+    if not os.path.exists(path):
+        os.makedirs(path)
+    
         
     fp=open(baseObj['base']['allAppDocument']+"/"+str(aid)+"/index.html","w")
     fp.write(html)

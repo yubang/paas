@@ -17,7 +17,13 @@ import json
 def buildApp(aid,appHost,language):
     "生成一个应用"
     #请求应用服务器生成应用
-    num=0#暂时选用第一台服务器
+    
+    #根据轮转算法选择服务器
+    dao=db.execute("select count(*) from paas_app")
+    r=objToDict(dao.first())
+    dao.close()
+    
+    num=r['count(*)'] % len(config.REMOTE_SERVER_PHP)
     data={'language':language,'appHost':config.REMOTE_SERVER_PHP[num],'aid':str(aid)}
     result=urlPostWithToken(config.REMOTE_SERVER_PHP[num],"/servlet/buildApp",data)
     
@@ -55,6 +61,8 @@ def startApp(aid):
     sql="update paas_app set status = 1 where id =%d"%(aid)
     dao=db.execute(sql)
     dao.close()
+    #平滑重启服务器
+    reloadServer()
     
     
 def stopApp(aid):
@@ -68,6 +76,8 @@ def stopApp(aid):
     sql="update paas_app set status = 3 where id =%d"%(aid)
     dao=db.execute(sql)
     dao.close()
+    #平滑重启服务器
+    reloadServer()
     
     
 def developApp(aid,option):
@@ -86,4 +96,9 @@ def developApp(aid,option):
     sql="update paas_app set status = 2 where id =%d"%(aid)
     dao=db.execute(sql)
     dao.close()
-      
+
+
+def reloadServer():
+    "平滑重启服务器"
+    baseObj=json.loads(getConfig("config"))
+    os.system(baseObj['nginx']['serviceReload'])      

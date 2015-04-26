@@ -189,6 +189,14 @@ def addApp():
         #初始化应用
         client.buildApp(obj.id,sqlDeal(host),sqlDeal(language))
         
+        #生成apiKey和secretKey
+        apiKey=hashlib.md5("apiKey_"+str(time.time())).hexdigest()
+        secretKey=hashlib.md5("secretKey_"+str(time.time())).hexdigest()
+        sql="insert into paas_app_token(aid,apiKey,secretKey) values('%s','%s','%s')"%(str(obj.id),apiKey,secretKey)
+        dao=db.execute(sql)
+        dao.close()
+        
+        
         return redirect("/admin/appManager")   
         
         

@@ -39,6 +39,8 @@ create table if not exists paas_db(
     primary key(id)
 );
 
+
+#git操作队列防止应用同时更新
 create table if not exists paas_gitQueue(
     id int(11) auto_increment not null,
     aid int(11) not null,
@@ -47,3 +49,14 @@ create table if not exists paas_gitQueue(
     executeSql varchar(255) not null,
     primary key(id)
 )ENGINE= MEMORY;
+
+
+create table if not exists paas_app_token(
+    id int(11) auto_increment,
+    aid int(11) not null,
+    apiKey varchar(32) not null,
+    secretKey varchar(32) not null,
+    createTime timestamp,
+    primary key(id),
+    unique(aid)
+);

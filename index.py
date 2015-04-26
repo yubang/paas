@@ -1,6 +1,6 @@
 #coding:UTF-8
 
-from flask import Flask
+from flask import Flask,render_template
 from app.admin import app as adminApp
 from app.servlet import app as servletApp
 from app.api import app as apiApp
@@ -15,12 +15,7 @@ app.register_blueprint(apiApp,url_prefix="/api")
 
 @app.route("/")
 def index():
-    from lib.db import db,objToDict
-    dao=db.execute("select count(*) from paas_app where remoteServer = '%s'"%("127.0.0.1"))
-    r=objToDict(dao.first())
-    dao.close()
-    print r
-    return "debug"
+    return render_template("index.html")
     
 if __name__ == "__main__":
     app.run(debug=True,host="0.0.0.0",port=8000)

@@ -8,14 +8,28 @@
 2015-04-25
 """
 
-from flask import Blueprint,request,session
+from flask import Blueprint,request,session,abort
 from lib.webApp import buildServerConfig
 from lib.db import db,objToDict,sqlDeal
 from lib import git
-import json
+
+from functools import wraps
+import json,config
+
 
 app=Blueprint("servlet",__name__)
 
+
+def checkToken(fn):
+    "检测调用者是否合法"
+    @wraps(fn)
+    def deal(*args,**kwds):
+        token=request.form.get("token",None)
+        if token == config.servletToken:
+            return fn()
+        else:
+            return abort(404)    
+    return deal
 
 @app.route('/buildApp',methods=['POST'])
 def buildApp():

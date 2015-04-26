@@ -7,7 +7,9 @@
 """
 
 from flask import Blueprint,render_template,request,redirect,session,g
+from functools import wraps
 import config,time,hashlib
+
 from lib.db import db,sqlDeal,objToDict,Session
 from lib.models import AppModel
 from lib.dbManager import buildDb
@@ -18,6 +20,7 @@ app=Blueprint("admin",__name__)
 
 def checkUser(fn):
     "检测管理员是否已经登录"
+    @wraps(fn)
     def deal(*args,**kwds):
         if session.has_key("admin"):
             return fn()
@@ -48,7 +51,8 @@ def account():
         return redirect("/admin")
         
 
-@app.route("/userManager")        
+@app.route("/userManager")
+@checkUser        
 def userManager():
     "用户管理面板"
     sql="select * from paas_account where status != 3 order by id desc"
@@ -58,7 +62,8 @@ def userManager():
     return render_template("admin/userManager.html")
     
     
-@app.route("/appManager")        
+@app.route("/appManager")
+@checkUser        
 def appManager():
     "应用管理面板"
     
@@ -72,7 +77,8 @@ def appManager():
     return render_template("admin/appManager.html")
     
     
-@app.route("/userAdd",methods=['GET','POST'])  
+@app.route("/userAdd",methods=['GET','POST'])
+@checkUser  
 def userAdd():
     "添加用户"
     if request.method == "GET":
@@ -101,7 +107,8 @@ def userAdd():
         return redirect("/admin/userManager") 
         
         
-@app.route("/userMessage",methods=['GET','POST'])        
+@app.route("/userMessage",methods=['GET','POST'])
+@checkUser        
 def userMessage():
     "修改用户信息"
     
@@ -139,6 +146,7 @@ def userMessage():
         return redirect("/admin/userManager")
         
 @app.route("/deleteUser")
+@checkUser
 def deleteUser():
     "删除用户"
     uid=request.args.get("id",None)
@@ -149,6 +157,7 @@ def deleteUser():
 
 
 @app.route("/addApp",methods=['GET','POST'])
+@checkUser
 def addApp():
     "添加应用"
     if request.method == "GET":
@@ -202,7 +211,8 @@ def addApp():
         return redirect("/admin/appManager")   
         
         
-@app.route("/deleteApp")        
+@app.route("/deleteApp")
+@checkUser        
 def deleteApp():
     "删除应用"
     uid=request.args.get("id",None)
@@ -212,7 +222,8 @@ def deleteApp():
     return redirect("/admin/appManager")
     
 
-@app.route("/editApp",methods=['GET','POST'])    
+@app.route("/editApp",methods=['GET','POST'])
+@checkUser    
 def editApp():
     "编辑应用"
     aid=request.args.get("id",None)
@@ -249,7 +260,8 @@ def editApp():
         return redirect("/admin/appManager")
         
         
-@app.route("/optionApp/<option>",methods=['POST'])        
+@app.route("/optionApp/<option>",methods=['POST'])
+@checkUser        
 def optionApp(option):
     "操作应用"
     aid=int(request.form.get("aid",None))

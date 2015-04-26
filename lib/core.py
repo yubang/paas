@@ -16,7 +16,7 @@ def urlPostWithToken(host,path,data):
     data['token']=config.servletToken
     headers = {"Content-type":"application/x-www-form-urlencoded","Accept":"text/plain"} 
     
-    con=httplib.HTTPConnection(host,8080)
+    con=httplib.HTTPConnection(host,config.APP_SERVER_PORT)
     con.request("POST",path,urllib.urlencode(data),headers)
     response=con.getresponse()
     html=response.read()

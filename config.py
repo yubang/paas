@@ -29,3 +29,10 @@ REMOTE_SERVER_PHP=[
 #服务器安全密钥
 clientToken="root"
 servletToken="root"
+
+#主服务域名
+API_HOST="127.0.0.5"
+
+
+#应用服务器端口
+APP_SERVER_PORT=8080

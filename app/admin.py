@@ -23,7 +23,7 @@ def checkUser(fn):
     @wraps(fn)
     def deal(*args,**kwds):
         if session.has_key("admin"):
-            return fn()
+            return fn(*args,**kwds)
         else:
             return redirect("/admin/account")
     return deal

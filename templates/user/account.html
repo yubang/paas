@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>管理员登录</title>
+        {% include "public_css.html" %}
+    </head>
+    <body>
+        
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                同学请登录
+            </div>
+            <div class="panel-body">
+                
+                <form action="" method="post">
+                    <p>
+                        用户名：<input type="text" name="username" class="form-control" required>
+                    </p>
+                    <p>
+                        密码：<input type="password" name="password" class="form-control" required>
+                    </p>
+                    <p align="center">
+                        <input type="submit" value="登录" class="btn btn-primary">
+                    </p>
+                </form>
+                
+            </div>
+        </div>
+        
+        {% include "public_js.html" %}
+    </body>
+</html>

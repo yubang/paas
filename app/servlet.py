@@ -41,7 +41,7 @@ def buildApp():
         language=request.form.get("language",None)
         
         #确定应用端口号
-        dao=db.execute("select count(*) from paas_app where remoteServer = '%s'"%("127.0.0.1"))
+        dao=db.execute("select count(*) from paas_app where remoteServer = '%s'"%(appHost))
         r=objToDict(dao.first())
         dao.close()
         appPort=10001+int(r['count(*)'])

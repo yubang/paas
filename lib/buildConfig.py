@@ -151,7 +151,7 @@ def buildStaticConfig(aid,appHost,appPort):
     baseObj=getBaseConfig()#获取配置文件
     
     #添加用户和用户组
-    os.system("useradd -g %s %s"%(baseObj['base']['webGroup'],baseObj['base']['phpAppPrefix']+str(aid)))
+    os.system("useradd -g %s %s"%(baseObj['base']['webGroup'],baseObj['base']['staticAppPrefix']+str(aid)))
     
     appSocketPath=baseObj['base']['appSocketPath']+"/"+str(aid)
     appDocument=baseObj['base']['allAppDocument']+"/"+str(aid)

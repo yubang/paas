@@ -33,6 +33,9 @@ def buildApp(aid,appHost,language):
         buildMainServerConfig(aid,appHost,obj['remoteSocket'])
         #把远程服务器地址写入数据库
         sql="update paas_app set remoteServer = '%s' ,remoteSocket = '%s' where id = %d"%(config.REMOTE_SERVER_PHP[num],obj['remoteSocket'],aid)
+        dao=db.execute(sql)
+        dao.close()
+        
         return True
     else:
         return False

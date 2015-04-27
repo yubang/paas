@@ -32,6 +32,7 @@ def checkToken(fn):
     return deal
 
 @app.route('/buildApp',methods=['POST'])
+@checkToken
 def buildApp():
     "创建应用"
     try:

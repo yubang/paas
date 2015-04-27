@@ -13,3 +13,11 @@ def getConfig(name):
     data=fp.read()
     fp.close()
     return data
+    
+    
+def getFile(name):
+    "获取文件"
+    fp=open(config.PAAS_PATH+"/data/"+name,"r")
+    data=fp.read()
+    fp.close()
+    return data

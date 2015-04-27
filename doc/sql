@@ -6,6 +6,7 @@ create table if not exists paas_account(
     realname varchar(10) not null,
     college varchar(50) not null,
     specialty varchar(100) not null,
+    number varchar(20) not null,
     joinTime timestamp,
     primary key(id),
     unique(username)

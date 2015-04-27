@@ -8,7 +8,7 @@
 
 
 from lib.app import getConfig
-from lib.buildConfig import buildPhpConfig
+from lib.buildConfig import buildPhpConfig,buildStaticConfig
 import os,json
 
 """
@@ -44,4 +44,6 @@ def buildMainServerConfig(aid,appHost,remoteSocket):
 def buildServerConfig(aid,appHost,appPort,language):
     "动态生成容器与前端服务器配置文件"
     if language == "php":
-        buildPhpConfig(aid,appHost,appPort)   
+        buildPhpConfig(aid,appHost,appPort)
+    elif language == "static":
+        buildStaticConfig(aid,appHost,appPort)  

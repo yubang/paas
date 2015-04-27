@@ -6,9 +6,16 @@
 2015-04-20
 """
 
+"""
+一点点说明，其实就是在应用服务器的nginx里面添加一个配置文件，监听一个端口，并且反向代理到容器
+容器添加一个配置文件
+"""
+
+from lib.app import getConfig,getFile
 import json,os
 
 
+#---------------------- php -------------------------------
 """
 对外接口，生成php配置文件
 @param aid 应用id
@@ -59,10 +66,7 @@ def refresh(aid,appAccount):
 def buildWelcomeFile(aid):
     "初始化应用目录"
     baseObj=getBaseConfig()#获取配置文件
-    
-    fp=open("data/index.html","r")
-    html=fp.read()
-    fp.close()
+    html=getFile("index.html")
     
     path=baseObj['base']['allAppDocument']+"/"+str(aid)
     if not os.path.exists(path):
@@ -80,9 +84,7 @@ def buildWelcomeFile(aid):
 """
 def getBaseConfig():
     "获取基础数据"
-    fp=open("data/config.conf","r")
-    data=fp.read()
-    fp.close()
+    data=getConfig("config")
     return json.loads(data)
     
 
@@ -94,10 +96,8 @@ def getBaseConfig():
 """
 def buildPhpFpmConfig(aid,appSocketPath):
     "动态生成php应用虚拟主机配置文件"
-    fp=open("data/php-fpm.conf","r")
-    data=fp.read()
-    fp.close()
     
+    data=getConfig("php-fpm")
     baseObj=getBaseConfig()
     
     data=data.replace("{{ appId }}",aid)
@@ -121,10 +121,7 @@ def buildPhpFpmConfig(aid,appSocketPath):
 """
 def buildNginxPhpConfig(aid,appHost,appDocument,appSocketPath,appPort):
     "动态生成nginx映射虚拟主机配置文件"
-    fp=open("data/nginxPhp.conf","r")
-    data=fp.read()
-    fp.close()
-    
+    data=getConfig("nginxPhp")
     baseObj=getBaseConfig()
     
     data=data.replace("{{ appId }}",aid)
@@ -136,3 +133,50 @@ def buildNginxPhpConfig(aid,appHost,appDocument,appSocketPath,appPort):
     fp=open(baseObj['nginx']['confPath']+"/"+aid+".conf","w")
     fp.write(data)
     fp.close()
+
+#---------------------php-------------------------------    
+
+
+#---------------------static------------------------------
+"""
+对外接口，生成static配置文件
+@param aid 应用id
+@param appHost 应用域名
+@param appPort 应用端口
+@author:yubang
+2015-04-21
+"""
+def buildStaticConfig(aid,appHost,appPort):
+    "生成php配置文件，对外接口"
+    baseObj=getBaseConfig()#获取配置文件
+    
+    #添加用户和用户组
+    os.system("useradd -g %s %s"%(baseObj['base']['webGroup'],baseObj['base']['phpAppPrefix']+str(aid)))
+    
+    appSocketPath=baseObj['base']['appSocketPath']+"/"+str(aid)
+    appDocument=baseObj['base']['allAppDocument']+"/"+str(aid)
+    
+    buildStatic(str(aid),appDocument,appHost,appPort)#生成静态配置文件
+    
+    #初始化应用
+    buildWelcomeFile(str(aid))
+    
+    #刷新权限
+    refresh(str(aid),baseObj['base']['staticAppPrefix']+str(aid))
+    
+    #平滑加载配置文件
+    os.system(baseObj['nginx']['serviceReload'])
+
+
+
+def buildStatic(aid,appDocument,appHost,appPort):
+    "生成静态文件配置文件"
+    baseObj=getBaseConfig()
+    data=getFile("static.conf")
+    data=data.replace("{{ appId }}",aid).replace("{{ appDocument }}",appDocument).replace("{{ appHost }}",appHost).replace("{{ appPort }}",str(appPort))
+    fp=open(baseObj['nginx']['confPath']+"/"+aid+".conf","w")
+    fp.write(data)
+    fp.close()
+    
+    
+#---------------------static------------------------------

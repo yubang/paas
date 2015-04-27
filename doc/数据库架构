@@ -9,6 +9,7 @@ status 是否启用
 realname 真实名字
 college 学院
 specialty 专业
+number 学号
 joinTime 创建时间
 
 

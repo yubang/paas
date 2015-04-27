@@ -34,8 +34,9 @@
             
             <p>
                 应用语言：
-                <select id="language" name="language" class="form-control">
+                <select id="language" name="language" class="form-control" {% if not g.add%}disabled{% endif %}>
                     <option>php</option>
+                    <option>static</option>
                 </select>
             </p>    
             

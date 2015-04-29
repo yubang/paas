@@ -1,33 +1,35 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>管理员登录</title>
-        {% include "public_css.html" %}
-    </head>
-    <body>
-        
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                同学请登录
-            </div>
-            <div class="panel-body">
-                
-                <form action="" method="post">
-                    <p>
-                        用户名：<input type="text" name="username" class="form-control" required>
-                    </p>
-                    <p>
-                        密码：<input type="password" name="password" class="form-control" required>
-                    </p>
-                    <p align="center">
-                        <input type="submit" value="登录" class="btn btn-primary">
-                    </p>
-                </form>
-                
-            </div>
-        </div>
-        
-        {% include "public_js.html" %}
-    </body>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>用户登录</title>
+
+    {% include "public_css.html" %}
+
+    <!-- Custom styles for this template -->
+    <link href="/static/css/signin.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <form class="form-signin" method="post">
+        <h2 class="form-signin-heading">请先登录</h2>
+        <label for="username" class="sr-only">用户名</label>
+        <input type="text" id="username" name="username" class="form-control" placeholder="用户名" required autofocus>
+        <label for="password" class="sr-only">密码</label>
+        <input type="password" id="password" name="password" class="form-control" placeholder="密码" required>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">登录</button>
+      </form>
+
+    </div> <!-- /container -->
+    {% include "public_js.html" %}
+  </body>
 </html>
+

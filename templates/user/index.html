@@ -1,28 +1,19 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>应用管理</title>
-        {% include 'public_css.html' %}
-    </head>
-    <body>
-        <p align="right"><a href="exit">退出</a></p>
-        <h1>欢迎您，{{ g.user['realname'] }}</h1>
-        
-        <hr>
-        {% for obj in g.lists %}
-        
-        <div class="panel panel-default">
+{% extends "user_base.html" %}
+
+{% block title %}应用管理{% endblock %}
+
+{% block content %}
+{% for obj in g.lists %}
+        <div class="panel panel-default" id="{{ obj.id }}-panel">
             <div class="panel-heading">{{ obj.title }}</div>
             <div class="panel-body">
-                <p>应用描述：{{ obj.description }}</p>
-                <p>应用语言：{{ obj.language }}</p>
-                <p>应用用户：{{ obj.username }}</p>
-                <p>应用git：{{ obj.gitUrl }}</p>
-                <p>应用域名：{{ obj.host }}</p>
-                <p>git回调api：http://{{ g.apiHost }}/api/git/{{ obj.apiKey }}/{{ obj.secretKey }}</p>
+                <p><strong>应用描述：</strong>{{ obj.description }}</p>
+                <p><strong>应用语言：</strong>{{ obj.language }}</p>
+                <p><strong>应用git：</strong>{{ obj.gitUrl }}</p>
+                <p><strong>应用域名：</strong>{{ obj.host }}</p>
+                <p><strong>git回调api：</strong>http://{{ g.apiHost }}/api/git/{{ obj.apiKey }}/{{ obj.secretKey }}</p>
                 <p>
-                    应用状态：
+                    <strong>应用状态：</strong>
                     {% if obj.status == -1 %}
                         未发布
                     {% elif obj.status == 0  %}
@@ -38,26 +29,24 @@
                     {% endif %}
                 </p>
                 <hr>
-                <p>数据库地址：{{ obj.dbHost }}</p>
-                <p>数据库名称：{{ obj.dbName }}</p>
-                <p>数据库用户名：{{ obj.dbUsername }}</p>
-                <p>数据库密码：{{ obj.dbPassword }}</p>
-                <p>数据库端口：{{ obj.dbPort }}</p>
-                <hr>
-                <p>
-                    <a href="javascript:option({{ obj.id }},'develop','发布');">发布应用</a>
-                    <a href="javascript:option({{ obj.id }},'start','启动');">启动应用</a>
-                    <a href="javascript:option({{ obj.id }},'stop','停止');">停止应用</a>
-                    <a href="javascript:option({{ obj.id }},'reboot','重启');">重启应用</a>
-                </p>
+                <p><strong>数据库地址：</strong>{{ obj.dbHost }}</p>
+                <p><strong>数据库名称：</strong>{{ obj.dbName }}</p>
+                <p><strong>数据库用户名：</strong>{{ obj.dbUsername }}</p>
+                <p><strong>数据库密码：</strong>{{ obj.dbPassword }}</p>
+                <p><strong>数据库端口：</strong>{{ obj.dbPort }}</p>
+            </div>
+            <div class="panel-footer">
+                <a href="javascript:option({{ obj.id }},'develop','发布');" class="btn btn-primary">发布应用</a>
+                <a href="javascript:option({{ obj.id }},'start','启动');" class="btn btn-success">启动应用</a>
+                <a href="javascript:option({{ obj.id }},'stop','停止');" class="btn btn-danger">停止应用</a>
+                <a href="javascript:option({{ obj.id }},'reboot','重启');" class="btn btn-warning">重启应用</a>
             </div>
         </div>
-        
-        {% endfor %}
-        
-        
-        {% include 'public_js.html' %}
-        <script>
+{% endfor %}
+{% endblock %}
+
+{% block script %}
+<script>
             function option(aid,optionType,message){
                 $.ajax({
                     'type':'POST',
@@ -70,8 +59,6 @@
                         alert(message+'失败，如果多次出现该问题请询问技术人员！');
                     }
                 });
-            }
-            
-        </script>
-    </body>
-</html>
+            } 
+</script>
+{% endblock %}

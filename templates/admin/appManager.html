@@ -39,12 +39,14 @@
                         发布失败           
                     {% endif %}
                 </p>
+                {% if obj.language != "static" %}
                 <hr>
                 <p>数据库地址：{{ obj.dbHost }}</p>
                 <p>数据库名称：{{ obj.dbName }}</p>
                 <p>数据库用户名：{{ obj.dbUsername }}</p>
                 <p>数据库密码：{{ obj.dbPassword }}</p>
                 <p>数据库端口：{{ obj.dbPort }}</p>
+                {% endif %}
                 <hr>
                 <p>
                     <a href="javascript:option({{ obj.id }},'develop','发布');">发布应用</a>

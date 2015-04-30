@@ -36,9 +36,11 @@ def index():
     "主页面"
     g.apiHost=config.API_HOST
     
-    sql="select paas_app_token.apiKey,paas_app_token.secretKey,paas_app.status,paas_db.username as dbUsername,paas_db.password as dbPassword,paas_db.dbName,paas_db.host as dbHost,paas_db.port as dbPort,paas_app.id,paas_app.gitUrl,paas_app.host,paas_app.remoteServer,paas_app.title,paas_app.description,paas_app.language,paas_account.username from paas_app_token,paas_app,paas_account,paas_db where paas_app.status != 4 AND paas_app.uid = paas_account.id AND paas_db.aid = paas_app.id AND paas_app_token.aid=paas_app.id  AND paas_app.uid = %d order by paas_app.id desc"%(session['user'])
+    sql="select paas_app_token.apiKey,paas_app_token.secretKey,paas_app.status,paas_app.id,paas_app.gitUrl,paas_app.host,paas_app.remoteServer,paas_app.title,paas_app.description,paas_app.language,paas_account.username from paas_app_token,paas_app,paas_account where paas_app.status != 4 AND paas_app.uid = paas_account.id AND  paas_app_token.aid=paas_app.id  AND paas_app.uid = %d order by paas_app.id desc"%(session['user'])
     dao=db.execute(sql)
     g.lists=map(objToDict,dao.fetchall())
+    #显示数据库信息
+    g.lists=map(client.getAppMysql,g.lists)
     dao.close()
     
     dao=db.execute("select * from paas_account where id = %d limit 1"%(session['user']))

@@ -104,4 +104,22 @@ def developApp(aid,option):
 def reloadServer():
     "平滑重启服务器"
     baseObj=json.loads(getConfig("config"))
-    os.system(baseObj['nginx']['serviceReload'])      
+    os.system(baseObj['nginx']['serviceReload'])
+    
+    
+def getAppMysql(obj):
+    "获取应用的数据库信息"
+    
+    if obj['language'] == "static":
+        return obj
+    
+    sql="select username as dbUsername,password as dbPassword,dbName,host as dbHost,port as dbPort from paas_db where aid = "+str(obj['id'])
+    dao=db.execute(sql)
+    lists=objToDict(dao.first())
+    dao.close()
+    
+    for key in lists:
+        obj[key]=lists[key]
+    
+    return obj
+          

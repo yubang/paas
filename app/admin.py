@@ -69,9 +69,10 @@ def appManager():
     
     g.apiHost=config.API_HOST
     
-    sql="select paas_app_token.apiKey,paas_app_token.secretKey,paas_app.status,paas_db.username as dbUsername,paas_db.password as dbPassword,paas_db.dbName,paas_db.host as dbHost,paas_db.port as dbPort,paas_app.id,paas_app.gitUrl,paas_app.host,paas_app.remoteServer,paas_app.title,paas_app.description,paas_app.language,paas_account.username from paas_app_token,paas_app,paas_account,paas_db where paas_app.status != 4 AND paas_app.uid = paas_account.id AND paas_db.aid = paas_app.id AND paas_app_token.aid=paas_app.id order by paas_app.id desc"
+    sql="select paas_app.status, paas_app_token.apiKey,paas_app_token.secretKey,paas_app.id,paas_app.gitUrl,paas_app.host,paas_app.remoteServer,paas_app.title,paas_app.description,paas_app.language,paas_account.username from paas_app_token,paas_app,paas_account  where paas_app.status != 4 AND paas_app.uid = paas_account.id AND  paas_app_token.aid=paas_app.id order by paas_app.id desc"
     dao=db.execute(sql)
     g.lists=map(objToDict,dao.fetchall())
+    g.lists=map(client.getAppMysql,g.lists)
     dao.close()
     
     return render_template("admin/appManager.html")
@@ -186,16 +187,17 @@ def addApp():
         session.add(obj)
         session.commit()
         
-        #为应用创建一个数据库
-        dbName=hashlib.md5(str(time.time())).hexdigest()
-        username=hashlib.md5(uid+str(time.time())).hexdigest()
-        password=hashlib.md5(title.encode("UTF-8")+str(time.time())).hexdigest()
-        #建立数据库
-        buildDb(dbName,username,password)
+        #为应用创建一个数据库,但是静态环境不需要数据库
+        if language != "static":
+            dbName=hashlib.md5(str(time.time())).hexdigest()
+            username=hashlib.md5(uid+str(time.time())).hexdigest()
+            password=hashlib.md5(title.encode("UTF-8")+str(time.time())).hexdigest()
+            #建立数据库
+            buildDb(dbName,username,password)
         
-        sql="insert into paas_db(uid,aid,dbName,username,password,host,port) values('%s','%s','%s','%s','%s','%s','%s')"%(sqlDeal(uid),str(obj.id),dbName,username,password,config.MYSQL_HOST,config.MYSQL_PORT)
-        dao=db.execute(sql)
-        dao.close()
+            sql="insert into paas_db(uid,aid,dbName,username,password,host,port) values('%s','%s','%s','%s','%s','%s','%s')"%(sqlDeal(uid),str(obj.id),dbName,username,password,config.MYSQL_HOST,config.MYSQL_PORT)
+            dao=db.execute(sql)
+            dao.close()
         
         #初始化应用
         client.buildApp(obj.id,sqlDeal(host),sqlDeal(language))

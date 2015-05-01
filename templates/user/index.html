@@ -88,7 +88,6 @@
     //处理面板的状态
     $(".app-panel").each(function(){
         changeStatus($(this).data("appid"), $(this).data("status"));
-        console.log($(this).data("appid"), $(this).data("status"));
     });
     function changeStatus(appid, status){
         var panel_class;

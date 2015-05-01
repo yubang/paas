@@ -78,6 +78,11 @@ def develop():
             
     executeSql="update paas_app set status = 1 where id = %d"%(aid)
     
+    #为了防止恶意不断请求操作应用，因此一段时间只保存一个操作
+    sql="delete from paas_gitQueue where aid = %d"%(aid)
+    dao=db.execute(sql)
+    dao.close()
+    
     sql="insert into paas_gitQueue(aid,command,gitUrl,executeSql) values(%d,'%s','%s','%s')"%(aid,command,gitUrl,sqlDeal(executeSql))
     dao=db.execute(sql)
     dao.close()

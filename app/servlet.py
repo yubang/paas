@@ -83,7 +83,7 @@ def develop():
     dao=db.execute(sql)
     dao.close()
     
-    sql="insert into paas_gitQueue(aid,command,gitUrl,executeSql) values(%d,'%s','%s','%s')"%(aid,command,gitUrl,sqlDeal(executeSql))
+    sql="insert into paas_gitQueue(aid,command,gitUrl,executeSql,appAccount,appGroup,appPath) values(%d,'%s','%s','%s','%s','%s','%s')"%(aid,command,gitUrl,sqlDeal(executeSql),appData['appAccount'],appData['appGroup'],appData['appPath'])
     dao=db.execute(sql)
     dao.close()
     

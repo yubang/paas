@@ -187,10 +187,16 @@ def addApp():
         session.add(obj)
         session.commit()
         
+        #记录应用路径，用户，用户组
+        appUser,appGroup,appPath=client.getAppMessage(obj.id,sqlDeal(language))
+        sql="update paas_app set appAccount = '%s' , appGroup = '%s',appPath = '%s' where id = %d"%(appUser,appGroup,appPath,obj.id)
+        dao=db.execute(sql)
+        dao.close()
+        
         #为应用创建一个数据库,但是静态环境不需要数据库
         if language != "static":
             dbName=hashlib.md5(str(time.time())).hexdigest()
-            username=hashlib.md5(uid+str(time.time())).hexdigest()
+            username=hashlib.md5(uid+str(time.time())).hexdigest()[8:-8]
             password=hashlib.md5(title.encode("UTF-8")+str(time.time())).hexdigest()
             #建立数据库
             buildDb(dbName,username,password)
@@ -209,7 +215,6 @@ def addApp():
         dao=db.execute(sql)
         dao.close()
         
-        
         return redirect("/admin/appManager")   
         
         
@@ -217,10 +222,16 @@ def addApp():
 @checkUser        
 def deleteApp():
     "删除应用"
-    uid=request.args.get("id",None)
-    sql="update paas_app set status = 4 where id = "+sqlDeal(uid)
+    aid=request.args.get("id",None)
+    
+    #删除应用前停止运行
+    client.stopApp(int(aid.encode("UTF-8")))
+    
+    
+    sql="update paas_app set status = 4 where id = "+sqlDeal(aid)
     dao=db.execute(sql)
     dao.close()
+    
     return redirect("/admin/appManager")
     
 

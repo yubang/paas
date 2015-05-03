@@ -24,6 +24,8 @@ gitUrl git地址，用于拉取代码
 remoteServer 远程服务器地址（用于分布式部署）
 remoteSocket 远程应用地址（用于反向代理）
 status 状态 0未部署 1正在运行 2部署中 3已经停止 -1未发布 4已经删除 5发布失败
+appAccount 应用用户
+appGroup 应用用户组
 createTime 应用创建时间
 
 

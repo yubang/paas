@@ -55,7 +55,7 @@ def api():
     "Ajax Api"
     g.apiHost=config.API_HOST
     
-    sql="select paas_app_token.apiKey,paas_app_token.secretKey,paas_app.status,paas_app.id,paas_app.gitUrl,paas_app.host,paas_app.remoteServer,paas_app.title,paas_app.description,paas_app.language,paas_account.username from paas_app_token,paas_app,paas_account where paas_app.status != 4 AND paas_app.uid = paas_account.id AND  paas_app_token.aid=paas_app.id  AND paas_app.uid = %d order by paas_app.id desc"%(session['user'])
+    sql="select paas_app.status,paas_app.id,paas_app.title,paas_app.language,paas_account.username from paas_app_token,paas_app,paas_account where paas_app.status != 4 AND paas_app.uid = paas_account.id AND  paas_app_token.aid=paas_app.id  AND paas_app.uid = %d order by paas_app.id desc"%(session['user'])
     dao=db.execute(sql)
     obj=map(objToDict,dao.fetchall())
     dao.close()

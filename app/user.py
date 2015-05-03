@@ -7,7 +7,7 @@
 """
 
 
-from flask import Blueprint,request,g,render_template,session,redirect,abort
+from flask import Blueprint,request,g,render_template,session,redirect,abort,json
 from lib.db import db,objToDict,sqlDeal
 from lib import client
 import config
@@ -49,6 +49,18 @@ def index():
     
     return render_template("user/index.html")
     
+@app.route("/api")
+@checkUser
+def api():
+    "Ajax Api"
+    g.apiHost=config.API_HOST
+    
+    sql="select paas_app_token.apiKey,paas_app_token.secretKey,paas_app.status,paas_app.id,paas_app.gitUrl,paas_app.host,paas_app.remoteServer,paas_app.title,paas_app.description,paas_app.language,paas_account.username from paas_app_token,paas_app,paas_account where paas_app.status != 4 AND paas_app.uid = paas_account.id AND  paas_app_token.aid=paas_app.id  AND paas_app.uid = %d order by paas_app.id desc"%(session['user'])
+    dao=db.execute(sql)
+    obj=map(objToDict,dao.fetchall())
+    dao.close()
+    
+    return json.dumps(obj)
 
 @app.route("/account",methods=['GET','POST'])
 def account():

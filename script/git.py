@@ -1,6 +1,6 @@
 #coding:UTF-8
 
-import sys,time
+import sys,time,os
 
 #引入上级模块
 sys.path.append('../')
@@ -17,6 +17,10 @@ def deal(obj):
         git.pullCode(obj['aid'])
     elif obj['command'] == "cp":
         git.getCodeFromLocation(obj['aid'])
+    
+    #恢复应用权限
+    os.system("chown -Rv %s:%s %s"%(obj['appAccount'],obj['appGroup'],obj['appPath']))
+        
     return True
 
 

@@ -23,8 +23,12 @@ create table if not exists paas_app(
     remoteServer varchar(255) not null,
     remoteSocket varchar(255) not null,
     status tinyint(1),
+    appAccount varchar(50) not null,
+    appGroup varchar(50) not null,
+    appPath varchar(255) not null,
     createTime timestamp,
-    primary key(id)
+    primary key(id),
+    unique(host)
 );
 
 create table if not exists paas_db(
@@ -48,6 +52,9 @@ create table if not exists paas_gitQueue(
     command varchar(50) not null,
     gitUrl varchar(255) not null,
     executeSql varchar(255) not null,
+    appAccount varchar(50) not null,
+    appGroup varchar(50) not null,
+    appPath varchar(255) not null,
     primary key(id)
 )ENGINE= MEMORY;
 

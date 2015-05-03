@@ -9,7 +9,7 @@
 import config,os
 from lib.core import urlPostWithToken
 from lib.webApp import buildMainServerConfig
-from lib.app import getConfig
+from lib.app import getConfig,getFile
 from lib.db import db,objToDict
 import json
 
@@ -122,4 +122,26 @@ def getAppMysql(obj):
         obj[key]=lists[key]
     
     return obj
-          
+
+
+def getAppMessage(aid,language):
+    "获取app用户和用户组，应用路径"
+    baseObj=getBaseConfig()#获取配置文件
+    
+    if language == "php":
+        appUser=baseObj['base']['phpAppPrefix']+str(aid)
+    else:
+        appUser=baseObj['base']['staticAppPrefix']+str(aid)
+    appGroup=baseObj['base']['webGroup']
+    appPath=baseObj['base']['allAppDocument']+"/"+str(aid)
+    
+    return appUser,appGroup,appPath
+    
+"""
+@author:yubang
+2015-04-21
+"""
+def getBaseConfig():
+    "获取基础数据"
+    data=getConfig("config")
+    return json.loads(data)         

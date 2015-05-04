@@ -4,7 +4,7 @@
 
 {% block content %}
 {% for obj in g.lists %}
-        <div class="panel panel-default app-panel" id="panel-{{ obj.id }}" data-status="{{ obj.status }}" data-appid="{{ obj.id }}">
+        <div class="panel panel-default app-panel" id="panel-{{ obj.id }}" data-appid="{{ obj.id }}">
             <div class="panel-heading app-panel-head" data-appid="{{ obj.id }}">{{ obj.title }}</div>
             <div class="panel-body app-panel-body" id="body-{{ obj.id }}">
                 <p><strong>应用描述：</strong>{{ obj.description }}</p>

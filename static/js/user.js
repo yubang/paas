@@ -19,11 +19,6 @@ function user_index(){
         $("#body-"+hash).toggle();
         $("#footer-"+hash).toggle();
     }
-
-    //处理面板的状态
-    $(".app-panel").each(function(){
-        changeStatus($(this).data("appid"), $(this).data("status"));
-    });
     
     //循环查询应用状态
     refresh_status_with_time();

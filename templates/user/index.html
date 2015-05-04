@@ -10,7 +10,7 @@
                 <p><strong>应用描述：</strong>{{ obj.description }}</p>
                 <p><strong>应用语言：</strong>{{ obj.language }}</p>
                 <p><strong>应用git：</strong>{{ obj.gitUrl }}</p>
-                <p><strong>应用域名：</strong>{{ obj.host }}</p>
+                <p><strong>应用域名：</strong><a href="{{ obj.host }}" target="_blank">{{ obj.host }}</a></p>
                 <p><strong>git回调api：</strong>http://{{ g.apiHost }}/api/git/{{ obj.apiKey }}/{{ obj.secretKey }}</p>
                 <p>
                     <strong>应用状态：</strong>

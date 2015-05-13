@@ -23,9 +23,9 @@ def getCodeFromOsc(aid,gitUrl):
     
     os.system("rm -Rvf %s"%(codePath))
         
-    out=os.popen("git clone %s %s"%(gitUrl,codePath))
-    log=out.read()
-    if log.find("Receiving objects: 100%") == -1:
+    os.system("git clone %s %s"%(gitUrl,codePath))
+    
+    if not os.path.exists(codePath):
         return False
     
     #迁移clone下来的代码

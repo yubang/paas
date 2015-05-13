@@ -5,7 +5,7 @@
 @author:yubang
 """
 
-DEBUG = True
+DEBUG = False
 SECRET_KEY = "root"
 
 #后台管理帐号

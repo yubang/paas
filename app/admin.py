@@ -13,7 +13,7 @@ import config,time,hashlib
 from lib.db import db,sqlDeal,objToDict,Session
 from lib.models import AppModel
 from lib.dbManager import buildDb
-from lib import client
+from lib import client,webApp
 
 app=Blueprint("admin",__name__)
 
@@ -240,13 +240,14 @@ def deleteApp():
 def editApp():
     "编辑应用"
     aid=request.args.get("id",None)
+    
+    sql="select * from paas_app where id = %s limit 1"%(sqlDeal(aid))
+    dao=db.execute(sql)
+    g.obj=objToDict(dao.first())
+    dao.close()
+    
     if request.method == "GET":
         g.add=False
-        
-        sql="select * from paas_app where id = %s limit 1"%(sqlDeal(aid))
-        dao=db.execute(sql)
-        g.obj=objToDict(dao.first())
-        dao.close()
         
         sql="select * from paas_account where status != 3"
         dao=db.execute(sql)
@@ -259,17 +260,21 @@ def editApp():
         uid=request.form.get("uid",None)
         title=request.form.get("title",None)
         description=request.form.get("description",None)
-        language=request.form.get("language",None)
         host=request.form.get("host",None)
         gitUrl=request.form.get("gitUrl",None)
         #处理git地址，防止注入恶意代码
         gitUrl=gitUrl.replace(" ","")
         
-        args=map(sqlDeal,[uid,title,description,language,host,gitUrl,aid])
+        args=map(sqlDeal,[uid,title,description,host,gitUrl,aid])
         
-        sql="update paas_app set uid = '%s',title='%s',description='%s',language='%s',host='%s',gitUrl='%s' where id = %s"%tuple(args)
+        sql="update paas_app set uid = '%s',title='%s',description='%s',host='%s',gitUrl='%s' where id = %s"%tuple(args)
         dao=db.execute(sql)
         dao.close()
+        
+        #修改配置文件，防止修改域名后nginx配置文件不一致
+        obj=g.obj
+        webApp.buildMainServerConfig(obj['id'],obj['host'],obj['remoteSocket'])
+        
         return redirect("/admin/appManager")
         
         
